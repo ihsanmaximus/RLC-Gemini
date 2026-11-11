@@ -1,0 +1,29 @@
+name: Format RLC CSS and JavaScript
+
+on:
+  push:
+    paths:
+      - "RLC-Website-Prototype/assets/css/style.css"
+      - "RLC-Website-Prototype/assets/js/main.js"
+      - "RLC-Website-Prototype/.github/workflows/format-assets.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Format CSS and JavaScript
+        run: npx --yes prettier@3.5.3 --write RLC-Website-Prototype/assets/css/style.css RLC-Website-Prototype/assets/js/main.js
+      - name: Commit formatted files
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add RLC-Website-Prototype/assets/css/style.css RLC-Website-Prototype/assets/js/main.js
+            git commit -m "Format RLC CSS and JavaScript assets"
+            git push
+          fi
